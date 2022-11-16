@@ -218,46 +218,6 @@ func Refresh(c *fiber.Ctx) error {
 	})
 }
 
-func Validate(c *fiber.Ctx) error {
-	var data map[string]string
-
-	if err := c.BodyParser(&data); err != nil {
-		return err
-	}
-
-	var user models.User
-
-	database.DB.Where("email = ?", data["email"]).First(&user)
-
-	if user.ID == 0 {
-		c.Status(fiber.StatusUnauthorized)
-		return c.JSON(fiber.Map{
-			"message": "Unauthorized!!",
-		})
-	}
-
-	if err := bcrypt.CompareHashAndPassword(user.Password, []byte(data["password"])); err != nil {
-		c.Status(fiber.StatusUnauthorized)
-		return c.JSON(fiber.Map{
-			"message": "Unauthorized!!",
-		})
-	}
-
-	if !user.IsAdmin {
-		c.Status(fiber.StatusUnauthorized)
-		return c.JSON(fiber.Map{
-			"message": "Unauthorized the user doesnt have access to do this operation! Contact admin for more info",
-		})
-	}
-	// createAJWTandRJWT(c)
-
-	c.Status(fiber.StatusAccepted)
-	return c.JSON(fiber.Map{
-		"message": "Success !!",
-	})
-
-}
-
 func Accessible(c *fiber.Ctx) error {
 	return c.SendString("Unauthenticated Page")
 }
