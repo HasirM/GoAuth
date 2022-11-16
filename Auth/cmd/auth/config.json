@@ -1,6 +1,0 @@
-{
-    "db_username": "root",
-    "db_password": "password",
-    "db_name": "auth_db",
-    "jwt_key": "authSuperSecretKey"
-}
